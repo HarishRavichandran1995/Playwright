@@ -3,7 +3,7 @@ package playwrightObjects;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 
-public class SearchComponent {
+public class    SearchComponent {
 
     private final Page page;
 

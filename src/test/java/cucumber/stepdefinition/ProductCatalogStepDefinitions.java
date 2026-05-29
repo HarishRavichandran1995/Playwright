@@ -1,11 +1,30 @@
 package cucumber.stepdefinition;
 
+import fixtures.ProductSummary;
+import io.cucumber.java.Before;
+import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.assertj.core.api.Assertions;
+import playwrightObjects.NavBar;
+import playwrightObjects.ProductList;
+import playwrightObjects.SearchComponent;
+
+import java.util.List;
+import java.util.Map;
 
 public class ProductCatalogStepDefinitions {
+    NavBar navBar;
+    SearchComponent searchComponent;
+    ProductList productList;
 
+    @Before
+    public void setupPageObjects() {
+        navBar = new NavBar(PlaywrightCucumberFixtures.getPage());
+        searchComponent = new SearchComponent(PlaywrightCucumberFixtures.getPage());
+        productList = new ProductList(PlaywrightCucumberFixtures.getPage());
+    }
 
 
     @Given("Sally is on the home page")
@@ -22,5 +41,16 @@ public class ProductCatalogStepDefinitions {
     public void the_product_should_be_displayed(String productName) {
         var matchingProducts = productList.getProductNames();
         Assertions.assertThat(matchingProducts).contains(productName);
+    }
+
+    @DataTableType
+    public ProductSummary productSummaryRow(Map<String, String> productData) {
+        return new ProductSummary(productData.get("Product"),productData.get("Price"));
+    }
+
+    @Then("the following products should be displayed:")
+    public void theFollowingProductsShouldBeDisplayed(List<ProductSummary> expectedProductSummaries) {
+        List<ProductSummary> matchingProducts = productList.getProductSummaries();
+        Assertions.assertThat(matchingProducts).containsExactlyInAnyOrderElementsOf(expectedProductSummaries);
     }
 }
