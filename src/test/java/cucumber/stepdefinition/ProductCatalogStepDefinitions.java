@@ -3,6 +3,8 @@ package cucumber.stepdefinition;
 import fixtures.ProductSummary;
 import io.cucumber.java.Before;
 import io.cucumber.java.DataTableType;
+import io.cucumber.java.PendingException;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -52,5 +54,35 @@ public class ProductCatalogStepDefinitions {
     public void theFollowingProductsShouldBeDisplayed(List<ProductSummary> expectedProductSummaries) {
         List<ProductSummary> matchingProducts = productList.getProductSummaries();
         Assertions.assertThat(matchingProducts).containsExactlyInAnyOrderElementsOf(expectedProductSummaries);
+    }
+
+    @Then("no products should be displayed")
+    public void noProductsShouldBeDisplayed() {
+        List<ProductSummary> productSummaries = productList.getProductSummaries();
+        Assertions.assertThat(productSummaries).isEmpty();
+    }
+
+    @And("the message {string} should be displayed")
+    public void theMessageShouldBeDisplayed(String msgText) {
+        String searchCompletedMessage = productList.getSearchCompletedMessage();
+        Assertions.assertThat(searchCompletedMessage).isEqualTo(msgText);
+    }
+
+    @And("she filters by {string}")
+    public void sheFiltersBy(String filterName) {
+        searchComponent.filterBy(filterName);
+    }
+
+
+    @When("she sorts by {string}")
+    public void sheSortsBy(String sortFilter) {
+        searchComponent.sortBy(sortFilter);
+    }
+
+    @Then("the first product displayed should be {string}")
+    public void theFirstProductDisplayedShouldBe(String firstProductName) {
+        List<String> productNames = productList.getProductNames();
+        Assertions.assertThat(productNames).startsWith(firstProductName);
+
     }
 }

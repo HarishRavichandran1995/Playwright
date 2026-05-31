@@ -23,5 +23,18 @@ public class    SearchComponent {
             page.getByTestId("search-reset").click();
         });
     }
+
+    public void filterBy(String filterName) {
+        page.waitForResponse("**/products?**by_category=**", () -> {
+            page.getByLabel(filterName).click();
+        });
+    }
+
+        public void sortBy(String sortFilter) {
+            page.waitForResponse("**/products?page=0&sort=**", () -> {
+                page.getByTestId("sort").selectOption(sortFilter);
+            });
+            page.waitForTimeout(250);
+        }
 }
 
